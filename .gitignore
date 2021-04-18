@@ -1,0 +1,15 @@
+*.class
+*.log
+**/__pycache__/
+**/.idea/
+**/.bsp/
+**/project/project/
+**/project/target/
+**/target/task-temp-directory/
+**/target/scala-2.13/update/
+**/target/scala-2.13/zinc/
+**/target/scala-2.13/classes/
+**/target/global-logging/
+**/target/streams/
+**/target/.history3
+
