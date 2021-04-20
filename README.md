@@ -12,13 +12,15 @@
 Данные надо проверить, сохранить и предоставить доступ к ним.
 
 ## Реализация
+Kafka, Cassandra и PostgreSQL запускаются в Docker.
+
 - **Writer** принимает потоки из Kafka, фильтрует их и в виде потока сообщений помещает в Cassandra.
 - **Reader** читает поток сообщений из Cassandra и обновляет данные в СУБД PostgreSQL.
-- **Query** предоставляет REST интерфейс для доступа к данным.
-
-## Дополнение
-- Kafka, Cassandra и PostgreSQL запускаются в Docker.
-- **Generator** создаёт поток данных в Kafka для тестирования.
+- **Query** предоставляет REST интерфейс для доступа к данным:
+	- Akka HTTP
+	- tapir
+	- Slick
+- **Generator** создаёт поток данных в Kafka для тестирования:
 	- ZIO Config
 	- ZIO Kafka
 	- ZIO Logging
