@@ -53,7 +53,7 @@ object Generator extends App {
           }
       }
       .mapM { producerRecord =>
-        log.info(s"Producing $producerRecord to Kafka...") *>
+        log.info(s"Producing $producerRecord") *>
           Producer.produce[Any, Int, String](producerRecord)
       }
       .runDrain
@@ -65,10 +65,7 @@ object Generator extends App {
     val producerLayer =
       Producer.make[Any, Int, String](producerSettings, Serde.int, Serde.string).toLayer
 
-    val loggingLayer = Slf4jLogger.make { (context, message) =>
-      val correlationId = context(LogAnnotation.CorrelationId)
-      "[correlation-id = %s] %s".format(correlationId, message)
-    }
+    val loggingLayer = Slf4jLogger.make { (_, message) => message }
 
     loggingLayer ++ producerLayer
   }
