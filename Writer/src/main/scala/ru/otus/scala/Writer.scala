@@ -1,5 +1,6 @@
 package ru.otus.scala
 
+import akka.Done
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.kafka.scaladsl.Consumer
@@ -7,7 +8,8 @@ import akka.kafka.{ConsumerSettings, Subscriptions}
 import akka.stream.scaladsl._
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization._
-import scala.concurrent.ExecutionContext
+
+import scala.concurrent.{ExecutionContext, Future}
 
 object Writer {
   def main(args: Array[String]): Unit = {
@@ -28,11 +30,11 @@ object Writer {
         .withBootstrapServers(bootstrapServers)
         .withGroupId(groupId)
 
-    Consumer
+    val done: Future[Done] = Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topics: _*))
       .toMat(Sink.foreach(println))(Keep.right)
       .run()
 
-//    system.terminate()
+    done.onComplete(_ => system.terminate())
   }
 }
