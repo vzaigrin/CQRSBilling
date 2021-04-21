@@ -37,17 +37,17 @@ object Generator extends App {
               new ProducerRecord(
                 appConfig.callTopic,
                 id,
-                Data(msisdn, year, month, day, calls).asJson.toString
+                Data(msisdn, year, month, day, calls).asJson.noSpaces
               ),
               new ProducerRecord(
                 appConfig.textTopic,
                 id,
-                Data(msisdn, year, month, day, text).asJson.toString
+                Data(msisdn, year, month, day, text).asJson.noSpaces
               ),
               new ProducerRecord(
                 appConfig.webTopic,
                 id,
-                Data(msisdn, year, month, day, web).asJson.toString
+                Data(msisdn, year, month, day, web).asJson.noSpaces
               )
             )
           }
