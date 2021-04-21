@@ -5,10 +5,8 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.kafka.scaladsl.Consumer
 import akka.kafka.{ConsumerSettings, Subscriptions}
-import akka.stream.scaladsl._
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization._
-
 import scala.concurrent.{ExecutionContext, Future}
 
 object Writer {
@@ -32,8 +30,9 @@ object Writer {
 
     val done: Future[Done] = Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topics: _*))
-      .toMat(Sink.foreach(println))(Keep.right)
-      .run()
+      .runForeach { cr => println(f"${cr.topic}%4s\t${cr.offset}\t${cr.key}\t${cr.value}") }
+//      .toMat(Sink.foreach(println))(Keep.right)
+//      .run()
 
     done.onComplete(_ => system.terminate())
   }
