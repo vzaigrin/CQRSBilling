@@ -20,6 +20,7 @@ object Writer {
     val bootstrapServers = config.getString("kafka.bootstrap.servers")
     val topics           = config.getString("kafka.topics").split(",")
     val groupId          = config.getString("kafka.group.id")
+    val msisdnBase       = config.getString("msisdnBase")
 
     // Создаём систему акторов
     implicit val system: ActorSystem[Nothing]       = ActorSystem(Behaviors.empty, "Writer")
@@ -35,12 +36,13 @@ object Writer {
     val done: Future[Done] = Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topics: _*))
       .map { cr => (cr.topic, decode[Data](cr.value)) }
-      .filter { cr => cr._2.isRight }
-      .map { cr =>
-        cr._2 match {
-          case Right(v) => Event(cr._1, v)
+      .filter { t => t._2.isRight }
+      .map { t =>
+        t._2 match {
+          case Right(v) => Event(t._1, v)
         }
       }
+      .filter { e => e.msisdn >= msisdnBase + "00" && e.msisdn <= msisdnBase + "99" }
       .runForeach(println)
 //      .toMat(Sink.foreach(println))(Keep.right)
 //      .run()
