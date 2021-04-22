@@ -1,7 +1,7 @@
 package ru.otus.scala
 
 case class Data(
-    msisdn: Long,
+    msisdn: String,
     year: Int,
     month: Int,
     day: Int,
