@@ -39,7 +39,8 @@ object Writer {
       .filter { t => t._2.isRight }
       .map { t =>
         t._2 match {
-          case Right(v) => Event(t._1, v)
+          case Right(v) => Command(t._1, v)
+          case _        => Command()
         }
       }
       .filter { e => e.msisdn >= msisdnBase + "00" && e.msisdn <= msisdnBase + "99" }
