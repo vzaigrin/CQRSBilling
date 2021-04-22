@@ -15,7 +15,7 @@ class MonthlyDaoSlick(db: Database)(implicit ec: ExecutionContext) extends Dao[M
 
   override def findByField(field: String, value: String): Future[Seq[Monthly]] =
     field.toLowerCase match {
-      case "msisdn" => findByCondition(_.msisdn === value.toLong)
+      case "msisdn" => findByCondition(_.msisdn === value)
       case "year"   => findByCondition(_.year === value.toInt)
       case "month"  => findByCondition(_.month === value.toInt)
       case _        => Future.successful(Seq())

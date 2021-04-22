@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS daily (
-  msisdn BIGINT
+  msisdn VARCHAR(11)
   , year INT
   , month INT
   , day INT

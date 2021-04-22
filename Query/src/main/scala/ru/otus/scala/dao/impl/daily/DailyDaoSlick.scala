@@ -15,7 +15,7 @@ class DailyDaoSlick(db: Database)(implicit ec: ExecutionContext) extends Dao[Dai
 
   override def findByField(field: String, value: String): Future[Seq[Daily]] =
     field.toLowerCase match {
-      case "msisdn" => findByCondition(_.msisdn === value.toLong)
+      case "msisdn" => findByCondition(_.msisdn === value)
       case "year"   => findByCondition(_.year === value.toInt)
       case "month"  => findByCondition(_.month === value.toInt)
       case "day"    => findByCondition(_.day === value.toInt)

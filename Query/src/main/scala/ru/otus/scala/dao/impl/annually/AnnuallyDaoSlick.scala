@@ -15,7 +15,7 @@ class AnnuallyDaoSlick(db: Database)(implicit ec: ExecutionContext) extends Dao[
 
   override def findByField(field: String, value: String): Future[Seq[Annually]] =
     field.toLowerCase match {
-      case "msisdn" => findByCondition(_.msisdn === value.toLong)
+      case "msisdn" => findByCondition(_.msisdn === value)
       case "year"   => findByCondition(_.year === value.toInt)
       case _        => Future.successful(Seq())
     }

@@ -18,6 +18,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-typed"     % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-cassandra" % cassandraVersion,
   "com.typesafe.akka" %% "akka-persistence-query"     % akkaVersion,
+  "com.typesafe.akka" %% "akka-cluster-tools"         % akkaVersion,
   "com.typesafe.akka" %% "akka-stream"                % akkaVersion,
   "com.typesafe.akka" %% "akka-stream-kafka"          % alpakkaKafkaVersion,
   "org.slf4j"          % "slf4j-nop"                  % slf4jVersion,

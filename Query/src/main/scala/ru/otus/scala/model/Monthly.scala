@@ -1,7 +1,7 @@
 package ru.otus.scala.model
 
 case class Monthly(
-    msisdn: Long,
+    msisdn: String,
     year: Int,
     month: Int,
     call: Long,
