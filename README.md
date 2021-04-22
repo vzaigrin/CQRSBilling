@@ -14,7 +14,11 @@
 ## Реализация
 Kafka, Cassandra и PostgreSQL запускаются в Docker.
 
-- **Writer** принимает потоки из Kafka, фильтрует их и в виде потока сообщений помещает в Cassandra.
+- **Writer** принимает потоки из Kafka, фильтрует их и в виде потока сообщений помещает в Cassandra:
+	- Alpakka Kafka
+	- Akka Streams
+	- Akka Persistence
+	- Circe
 - **Reader** читает поток сообщений из Cassandra и обновляет данные в СУБД PostgreSQL.
 - **Query** предоставляет REST интерфейс для доступа к данным:
 	- Akka HTTP
