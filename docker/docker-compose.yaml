@@ -38,7 +38,7 @@ services:
     volumes:
       - ./postgres.conf:/etc/postgresql/postgresql.conf
       - persistence-postgres:/var/lib/postgresql/data
-      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./postgres-schema.sql:/docker-entrypoint-initdb.d/schema.sql
     command: postgres -c config_file=/etc/postgresql/postgresql.conf
     ports:
       - "5432:5432"
@@ -49,6 +49,14 @@ services:
       - persistence-cassandra:/var/lib/cassandra
     ports:
       - "9042:9042"
+
+  cassandra-load-keyspace:
+    image: cassandra:latest
+    depends_on:
+      - cassandra
+    volumes:
+      - ./cassandra-schema.cql:/schema.cql
+    command: /bin/bash -c "sleep 60 && echo loading cassandra keyspace && cqlsh cassandra -f /schema.cql"
 
 volumes:
   persistence-postgres:
