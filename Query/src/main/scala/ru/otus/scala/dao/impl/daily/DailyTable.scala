@@ -3,7 +3,7 @@ package ru.otus.scala.dao.impl.daily
 import slick.jdbc.PostgresProfile.api._
 
 class DailyTable(tag: Tag) extends Table[DailyRow](tag, "daily") {
-  def msisdn = column[Long]("msisdn", O.PrimaryKey)
+  def msisdn = column[Long]("msisdn")
   def year   = column[Int]("year")
   def month  = column[Int]("month")
   def day    = column[Int]("day")

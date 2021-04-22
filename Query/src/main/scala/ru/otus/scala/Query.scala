@@ -1,6 +1,7 @@
 package ru.otus.scala
 
-import akka.actor.ActorSystem
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import com.typesafe.config.ConfigFactory
 import akka.http.scaladsl.server.Route
@@ -16,7 +17,7 @@ import sttp.tapir.openapi.circe.yaml._
 import sttp.tapir.docs.openapi._
 import sttp.tapir.swagger.akkahttp.SwaggerAkka
 import java.util.concurrent.Executors
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, ExecutionContextExecutor}
 import scala.io.StdIn
 import scala.util.Using
 
@@ -30,8 +31,10 @@ object Query {
     val port: Int          = config.getInt("http.port")
     val pathPrefix: String = config.getString("pathPrefix")
 
-    implicit val actorSystem: ActorSystem = ActorSystem("system")
-    val pool                              = Executors.newCachedThreadPool()
+    implicit val system: ActorSystem[Nothing]               = ActorSystem(Behaviors.empty, "Query")
+    implicit val executionContext: ExecutionContextExecutor = system.executionContext
+    //    implicit val actorSystem: ActorSystem = ActorSystem("system")
+    val pool = Executors.newCachedThreadPool()
 
     // Подключаемся к базе по конфигурации из файла
     Using.resource(Database.forConfig("db")) { db =>
@@ -60,14 +63,14 @@ object Query {
         .newServerAt(host, port)
         .bind(route)
 
-      println(s"Server online at https://$host:$port/")
-      println(s"Docs at: https://$host:$port/docs")
+      println(s"Server online at http://$host:$port/")
+      println(s"Docs at: http://$host:$port/docs")
       println("Press any key to exit ...")
       StdIn.readLine() // let it run until user presses return
 
       bindingFuture
-        .flatMap(_.unbind())                      // trigger unbinding from the port
-        .onComplete(_ => actorSystem.terminate()) // and shutdown when done
+        .flatMap(_.unbind())                 // trigger unbinding from the port
+        .onComplete(_ => system.terminate()) // and shutdown when done
     }
   }
 }

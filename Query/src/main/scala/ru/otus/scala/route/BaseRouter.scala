@@ -26,13 +26,6 @@ abstract class BaseRouter[T <: Entity](
       .in(pathPrefix)
       .errorOut(jsonBody[ErrorInfo])
 
-  def get(msisdn: Long): Future[Either[ErrorInfo, T]] = {
-    service.get(GetRequest(msisdn)) map {
-      case GetResponse.Found(e)     => Right(e.asInstanceOf[T])
-      case GetResponse.NotFound(id) => Left(NotFound(id.toString))
-    }
-  }
-
   def find(qSeq: Seq[(String, Option[String])]): Future[Either[ErrorInfo, Seq[T]]] = {
     qSeq.headOption match {
       case Some(key) =>

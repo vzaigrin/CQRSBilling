@@ -6,12 +6,6 @@ import ru.otus.scala.service.Service
 import scala.concurrent.{ExecutionContext, Future}
 
 class ServiceImpl[T <: Entity](dao: Dao[T])(implicit ec: ExecutionContext) extends Service[T] {
-  override def get(request: GetRequest): Future[GetResponse] =
-    dao.get(request.msisdn) map {
-      case Some(entity) => GetResponse.Found(entity)
-      case None         => GetResponse.NotFound(request.msisdn)
-    }
-
   override def find(request: FindRequest): Future[FindResponse] =
     request match {
       case FindRequest.ByField(field, value) =>

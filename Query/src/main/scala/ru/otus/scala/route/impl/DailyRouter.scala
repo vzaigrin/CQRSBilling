@@ -19,31 +19,21 @@ class DailyRouter(pathPrefix: String, service: Service[Daily], pool: ExecutorSer
 
   override def endpoints: List[Endpoint[_, _, _, _]] =
     List(
-      getEndpoint,
       findAllEndpoint,
       findByFieldEndpoint
     )
 
-  override def route: Route = concat(getRoute, findAllRoute, findByFieldRoute)
+  override def route: Route = concat(findAllRoute, findByFieldRoute)
 
   private val baseEndpoint: Endpoint[Unit, ErrorInfo, Unit, Any] =
     startEndpoint
       .tag(pathSuffix)
       .in(pathSuffix)
 
-  // Выводим отчёт для msisdn
-  def getEndpoint: Endpoint[Long, ErrorInfo, Daily, Any] =
-    baseEndpoint.get
-      .description("Вывод отчёта для msisdn")
-      .in(path[Long])
-      .out(jsonBody[Daily])
-
-  def getRoute: Route = AkkaHttpServerInterpreter.toRoute(getEndpoint)(get)
-
   // Выводим отчёт для всех msisdn
   def findAllEndpoint: Endpoint[Unit, ErrorInfo, Seq[Daily], Any] =
-    baseEndpoint
-      .description("Вывод отчёта всех msisdn")
+    baseEndpoint.get
+      .description("Вывод полного отчёта для всех msisdn")
       .out(jsonBody[Seq[Daily]])
 
   def findAll: Future[Either[ErrorInfo, Seq[Daily]]] = find(Seq())
@@ -56,7 +46,7 @@ class DailyRouter(pathPrefix: String, service: Service[Daily], pool: ExecutorSer
         Daily
       ], Any] =
     baseEndpoint.get
-      .description("Вывод отчётов по параметрам")
+      .description("Вывод полного отчёта по параметрам")
       .in("find")
       .in(query[Option[String]]("msisdn"))
       .in(query[Option[String]]("year"))

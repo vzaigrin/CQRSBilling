@@ -19,31 +19,21 @@ class AnnuallyRouter(pathPrefix: String, service: Service[Annually], pool: Execu
 
   override def endpoints: List[Endpoint[_, _, _, _]] =
     List(
-      getEndpoint,
       findAllEndpoint,
       findByFieldEndpoint
     )
 
-  override def route: Route = concat(getRoute, findAllRoute, findByFieldRoute)
+  override def route: Route = concat(findAllRoute, findByFieldRoute)
 
   private val baseEndpoint: Endpoint[Unit, ErrorInfo, Unit, Any] =
     startEndpoint
       .tag(pathSuffix)
       .in(pathSuffix)
 
-  // Выводим отчёт для msisdn
-  def getEndpoint: Endpoint[Long, ErrorInfo, Annually, Any] =
-    baseEndpoint.get
-      .description("Вывод отчёта для msisdn")
-      .in(path[Long])
-      .out(jsonBody[Annually])
-
-  def getRoute: Route = AkkaHttpServerInterpreter.toRoute(getEndpoint)(get)
-
   // Выводим отчёт для всех msisdn
   def findAllEndpoint: Endpoint[Unit, ErrorInfo, Seq[Annually], Any] =
-    baseEndpoint
-      .description("Вывод отчёта всех msisdn")
+    baseEndpoint.get
+      .description("Вывод ежегодного отчёта для всех msisdn")
       .out(jsonBody[Seq[Annually]])
 
   def findAll: Future[Either[ErrorInfo, Seq[Annually]]] = find(Seq())
@@ -55,7 +45,7 @@ class AnnuallyRouter(pathPrefix: String, service: Service[Annually], pool: Execu
     Annually
   ], Any] =
     baseEndpoint.get
-      .description("Вывод отчётов по параметрам")
+      .description("Вывод ежегодного отчёта по параметрам")
       .in("find")
       .in(query[Option[String]]("msisdn"))
       .in(query[Option[String]]("year"))

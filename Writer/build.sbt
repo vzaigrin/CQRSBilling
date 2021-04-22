@@ -12,14 +12,20 @@ lazy val slf4jVersion        = "1.7.30"
 
 libraryDependencies ++= Seq(
   "com.typesafe"       % "config"                     % configVersion,
+  "com.typesafe.akka" %% "akka-actor"                 % akkaVersion,
   "com.typesafe.akka" %% "akka-actor-typed"           % akkaVersion,
+  "com.typesafe.akka" %% "akka-persistence"           % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-typed"     % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-cassandra" % cassandraVersion,
-  "com.typesafe.akka" %% "akka-persistence"           % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence-query"     % akkaVersion,
-  "com.typesafe.akka" %% "akka-cluster-tools"         % akkaVersion,
   "com.typesafe.akka" %% "akka-stream"                % akkaVersion,
   "com.typesafe.akka" %% "akka-stream-kafka"          % alpakkaKafkaVersion,
   "org.slf4j"          % "slf4j-nop"                  % slf4jVersion,
   "com.typesafe.akka" %% "akka-persistence-testkit"   % akkaVersion % Test
 )
+
+assemblyMergeStrategy in assembly := {
+  case m if m.toLowerCase.endsWith("manifest.mf") => MergeStrategy.discard
+  case "module-info.class"                        => MergeStrategy.first
+  case _                                          => MergeStrategy.first
+}

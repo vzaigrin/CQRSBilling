@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS daily (
-  msisdn BIGINT PRIMARY KEY
+  msisdn BIGINT
   , year INT
   , month INT
   , day INT
@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW monthly AS
     , year
     , month
     , sum(call) AS call
-    , sum(text) AS test
+    , sum(text) AS text
     , sum(web) AS web
   FROM daily
   GROUP BY msisdn, year, month;
@@ -24,7 +24,7 @@ CREATE OR REPLACE VIEW annually AS
     msisdn
     , year
     , sum(call) AS call
-    , sum(text) AS test
+    , sum(text) AS text
     , sum(web) AS web
   FROM daily
   GROUP BY msisdn, year;
